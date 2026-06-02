@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'deploy/**'
-  workflow_dispatch:  # Allows manual trigger
+  workflow_dispatch:
 
 jobs:
   deploy-snowflake-changes-job:
@@ -21,8 +21,6 @@ jobs:
         with:
           python-version: '3.11'
 
-
-
       - name: Run schemachange
         env:
           SNOWFLAKE_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
@@ -31,10 +29,19 @@ jobs:
           SNOWFLAKE_ROLE: ${{ secrets.SF_ROLE }}
           SNOWFLAKE_WAREHOUSE: ${{ secrets.SF_WAREHOUSE }}
           SNOWFLAKE_DATABASE: ${{ secrets.SF_DATABASE }}
-          
+
         run: |
           echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
           python --version
+
+          echo "===== Checking Snowflake Environment Variables ====="
+          echo "ACCOUNT=${SNOWFLAKE_ACCOUNT:+SET}"
+          echo "USER=${SNOWFLAKE_USER:+SET}"
+          echo "PASSWORD=${SNOWFLAKE_PASSWORD:+SET}"
+          echo "ROLE=${SNOWFLAKE_ROLE:+SET}"
+          echo "WAREHOUSE=${SNOWFLAKE_WAREHOUSE:+SET}"
+          echo "DATABASE=${SNOWFLAKE_DATABASE:+SET}"
+          echo "==================================================="
 
           echo "Step 1: Installing schemachange (stable version)"
           pip install schemachange==3.7.0
@@ -44,7 +51,6 @@ jobs:
             -f $GITHUB_WORKSPACE/deploy \
             -a $SNOWFLAKE_ACCOUNT \
             -u $SNOWFLAKE_USER \
-            -p $SNOWFLAKE_PASSWORD \
             -r $SNOWFLAKE_ROLE \
             -w $SNOWFLAKE_WAREHOUSE \
             -d $SNOWFLAKE_DATABASE \
