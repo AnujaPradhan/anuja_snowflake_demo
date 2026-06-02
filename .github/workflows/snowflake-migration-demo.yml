@@ -41,6 +41,7 @@ jobs:
           echo "ROLE=${SNOWFLAKE_ROLE:+SET}"
           echo "WAREHOUSE=${SNOWFLAKE_WAREHOUSE:+SET}"
           echo "DATABASE=${SNOWFLAKE_DATABASE:+SET}"
+          echo "USER=$SNOWFLAKE_USER"
           echo "==================================================="
 
           echo "Step 1: Installing schemachange (stable version)"
